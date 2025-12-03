@@ -18,6 +18,9 @@
   />
 </head>
 <body>
+  <!-- Фоновый декор -->
+  <div class="hv-bg-decor"></div>
+
   <!-- Шапка -->
   <header class="hv-header">
     <div class="hv-container hv-header-inner">
@@ -30,6 +33,7 @@
         <a href="#about">О сервере</a>
         <a href="#season">Сезон и лор</a>
         <a href="#rules">Правила</a>
+        <a href="#merch">Мерч</a>
         <a href="#faq">FAQ</a>
         <a href="#trailer">Трейлер</a>
         <a href="#apply" class="hv-nav-cta">Отбор</a>
@@ -43,6 +47,11 @@
       <div class="hv-hero-overlay"></div>
       <div class="hv-container hv-hero-inner">
         <div class="hv-hero-main">
+          <div class="hv-ny-banner">
+            🎄 Horus отмечает Новый год!  
+            <span class="hv-ny-sub">зимний ресурс-пак, ёлка и особые ивенты</span>
+          </div>
+
           <p class="hv-pill">Закрытый сюжетный сервер Minecraft</p>
           <h1 class="hv-hero-title">
             Horus V — сезон, где лор важнее доната
@@ -75,6 +84,35 @@
               >YouTube-канале ArtemStudio</a
             >.
           </p>
+
+          <!-- Таймер до субботы -->
+          <div class="hv-countdown-card">
+            <div class="hv-countdown-title">
+              ⏰ До следующей субботы на Horus V:
+            </div>
+            <div class="hv-countdown-values" id="hv-countdown">
+              <div class="hv-countdown-item">
+                <span class="hv-count-number" id="hv-days">0</span>
+                <span class="hv-count-label">дней</span>
+              </div>
+              <div class="hv-countdown-item">
+                <span class="hv-count-number" id="hv-hours">00</span>
+                <span class="hv-count-label">часов</span>
+              </div>
+              <div class="hv-countdown-item">
+                <span class="hv-count-number" id="hv-mins">00</span>
+                <span class="hv-count-label">минут</span>
+              </div>
+              <div class="hv-countdown-item">
+                <span class="hv-count-number" id="hv-secs">00</span>
+                <span class="hv-count-label">секунд</span>
+              </div>
+            </div>
+            <p class="hv-muted hv-countdown-note">
+              Когда таймер достигает нуля, он автоматически начинает отсчёт до
+              следующей субботы.
+            </p>
+          </div>
 
           <div class="hv-meta-strip">
             <div class="hv-meta-item">
@@ -327,6 +365,47 @@
       </div>
     </section>
 
+    <!-- МЕРЧ -->
+    <section class="hv-section" id="merch">
+      <div class="hv-container hv-grid-2">
+        <div>
+          <h2>Будущий мерч Horus V</h2>
+          <p>
+            Мы хотим делать мерч только тогда, когда о сервере узнает
+            достаточно людей. Без лишнего «шопа» и детских принтов — только то,
+            что реально хочется носить.
+          </p>
+          <p>
+            Цель простая: когда о Horus V узнают <strong>10&nbsp;000 человек</strong>,
+            мы откроем отдельный магазин с мерчем.
+          </p>
+          <p class="hv-muted">
+            На сайте сейчас стоит счётчик ожидания — он локальный и больше
+            как пасхалка для тех, кто дочитал до этого места.
+          </p>
+        </div>
+
+        <div class="hv-card hv-card-merch">
+          <h3>Счётчик «ждущих мерч»</h3>
+          <p class="hv-merch-counter">
+            <span id="hv-merch-count">0</span>
+            <span class="hv-merch-divider">/</span>
+            <span>10&nbsp;000</span>
+          </p>
+          <button
+            id="hv-merch-button"
+            class="hv-btn hv-btn-primary hv-btn-block"
+            type="button"
+          >
+            Я жду мерч Horus V
+          </button>
+          <p class="hv-muted hv-merch-note" id="hv-merch-note">
+            Нажми кнопку — и твой голос добавится к счётчику на этом устройстве.
+          </p>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ -->
     <section class="hv-section" id="faq">
       <div class="hv-container">
@@ -408,8 +487,81 @@
   </footer>
 
   <script>
-    // Текущий год в футере
+    // Год в футере
     document.getElementById("hv-year").textContent = new Date().getFullYear();
+
+    // ===== Таймер до следующей субботы (локальное время, 19:00) =====
+    function getNextSaturday1900(now) {
+      const target = new Date(now);
+      const day = target.getDay(); // 0 - воскресенье, 6 - суббота
+      let daysToAdd = (6 - day + 7) % 7;
+      if (daysToAdd === 0 && (target.getHours() > 19 || (target.getHours() === 19 && (target.getMinutes() > 0 || target.getSeconds() > 0)))) {
+        daysToAdd = 7;
+      }
+      target.setDate(target.getDate() + daysToAdd);
+      target.setHours(19, 0, 0, 0);
+      return target;
+    }
+
+    function startCountdown() {
+      function update() {
+        const now = new Date();
+        const target = getNextSaturday1900(now);
+        const diff = target - now;
+
+        if (diff <= 0) {
+          // на всякий случай — сразу пересчитать
+          return;
+        }
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / (24 * 3600));
+        const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        document.getElementById("hv-days").textContent = String(days);
+        document.getElementById("hv-hours").textContent = String(hours).padStart(2, "0");
+        document.getElementById("hv-mins").textContent = String(mins).padStart(2, "0");
+        document.getElementById("hv-secs").textContent = String(secs).padStart(2, "0");
+      }
+
+      update();
+      setInterval(update, 1000);
+    }
+
+    startCountdown();
+
+    // ===== Локальный счётчик "ждущих мерч" (через localStorage) =====
+    (function () {
+      const GOAL = 10000;
+      const STORAGE_KEY = "hv-merch-clicks";
+      const countEl = document.getElementById("hv-merch-count");
+      const btnEl = document.getElementById("hv-merch-button");
+      const noteEl = document.getElementById("hv-merch-note");
+
+      let clicks = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+      if (Number.isNaN(clicks) || clicks < 0) clicks = 0;
+
+      function render() {
+        countEl.textContent = clicks;
+        if (clicks >= GOAL) {
+          btnEl.classList.add("hv-btn-disabled");
+          btnEl.disabled = true;
+          noteEl.textContent =
+            "На твоём устройстве цель достигнута. Мерч Horus V — вопрос времени.";
+        }
+      }
+
+      btnEl.addEventListener("click", () => {
+        if (clicks >= GOAL) return;
+        clicks += 1;
+        localStorage.setItem(STORAGE_KEY, String(clicks));
+        render();
+      });
+
+      render();
+    })();
   </script>
 </body>
 </html>
