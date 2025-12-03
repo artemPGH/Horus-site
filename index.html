@@ -637,6 +637,27 @@
         padding-inline: 14px;
       }
     }
+        /* Снег */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #f9fafb;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 9999;
+      animation-name: snow-fall;
+      animation-timing-function: linear;
+      animation-iteration-count: 1;
+      opacity: 0.9;
+      text-shadow: 0 0 6px rgba(148, 163, 184, 0.7);
+    }
+
+    @keyframes snow-fall {
+      to {
+        transform: translate3d(var(--x-move, 0px), 110vh, 0);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -964,119 +985,153 @@
   </div>
 
   <script>
-    // --------- ТАЙМЕР ДО СУББОТЫ 19:00 ----------
-    function getNextSaturday19() {
-      const now = new Date();
-      const result = new Date(now);
-      const day = now.getDay(); // 0 - воскресенье, 6 - суббота
+  // --------- ТАЙМЕР ДО СУББОТЫ 19:00 ----------
+  function getNextSaturday19() {
+    const now = new Date();
+    const result = new Date(now);
+    const day = now.getDay(); // 0 - воскресенье, 6 - суббота
 
-      let daysToAdd = (6 - day + 7) % 7; // сколько дней до ближайшей субботы
-      result.setDate(now.getDate() + daysToAdd);
-      result.setHours(19, 0, 0, 0);
+    let daysToAdd = (6 - day + 7) % 7; // сколько дней до ближайшей субботы
+    result.setDate(now.getDate() + daysToAdd);
+    result.setHours(19, 0, 0, 0);
 
-      // если уже позже 19:00 в субботу — берём субботу следующей недели
-      if (result <= now) {
-        result.setDate(result.getDate() + 7);
+    // если уже позже 19:00 в субботу — берём субботу следующей недели
+    if (result <= now) {
+      result.setDate(result.getDate() + 7);
+    }
+
+    return result;
+  }
+
+  const saturdayTimerEl = document.getElementById("saturday-timer");
+  let nextSaturday = getNextSaturday19();
+
+  function updateSaturdayTimer() {
+    const now = new Date();
+    if (now >= nextSaturday) {
+      nextSaturday = getNextSaturday19();
+    }
+
+    const diffMs = nextSaturday - now;
+    const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    saturdayTimerEl.textContent =
+      `${days}д ${hours.toString().padStart(2, "0")}ч ` +
+      `${minutes.toString().padStart(2, "0")}м ${seconds.toString().padStart(2, "0")}с`;
+  }
+
+  updateSaturdayTimer();
+  setInterval(updateSaturdayTimer, 1000);
+
+  // --------- ГЛОБАЛЬНЫЙ СЧЁТЧИК МЕРЧА (CountAPI) ----------
+  const MERCH_NAMESPACE = "horusv";
+  const MERCH_KEY = "merch_waiters";
+  const MERCH_LOCAL_KEY = "horus_merch_voted";
+
+  const merchCountEl = document.getElementById("merch-count");
+  const merchButtonEl = document.getElementById("merch-button");
+  const merchBarInnerEl = document.getElementById("merch-bar-inner");
+
+  const MERCH_TARGET = 10000;
+
+  function setMerchButtonLocked() {
+    merchButtonEl.disabled = true;
+    merchButtonEl.textContent = "Спасибо, ждём вместе!";
+  }
+
+  function updateMerchBar(value) {
+    const percent = Math.max(0, Math.min(100, (value / MERCH_TARGET) * 100));
+    merchBarInnerEl.style.width = percent + "%";
+  }
+
+  // Получение значения. Если ключа нет — создаём со значением 0.
+  async function fetchMerchCount() {
+    try {
+      let res = await fetch(`https://api.countapi.xyz/get/${MERCH_NAMESPACE}/${MERCH_KEY}`);
+
+      if (!res.ok) {
+        // создаём счётчик, если он ещё не существует
+        res = await fetch(
+          `https://api.countapi.xyz/create?namespace=${MERCH_NAMESPACE}&key=${MERCH_KEY}&value=0`
+        );
       }
 
-      return result;
+      const data = await res.json();
+      const value = Number(data.value || 0);
+      merchCountEl.textContent = value;
+      updateMerchBar(value);
+    } catch (err) {
+      console.error("Ошибка получения счётчика мерча:", err);
+      merchCountEl.textContent = "0";
+      updateMerchBar(0);
     }
+  }
 
-    const saturdayTimerEl = document.getElementById("saturday-timer");
-    let nextSaturday = getNextSaturday19();
-
-    function updateSaturdayTimer() {
-      const now = new Date();
-      if (now >= nextSaturday) {
-        nextSaturday = getNextSaturday19();
-      }
-
-      const diffMs = nextSaturday - now;
-      const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
-
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      saturdayTimerEl.textContent =
-        `${days}д ${hours.toString().padStart(2, "0")}ч ` +
-        `${minutes.toString().padStart(2, "0")}м ${seconds.toString().padStart(2, "0")}с`;
+  // Инкремент при клике
+  async function incrementMerchCount() {
+    try {
+      const res = await fetch(`https://api.countapi.xyz/hit/${MERCH_NAMESPACE}/${MERCH_KEY}`);
+      const data = await res.json();
+      const value = Number(data.value || 0);
+      merchCountEl.textContent = value;
+      updateMerchBar(value);
+    } catch (err) {
+      console.error("Ошибка инкремента счётчика мерча:", err);
     }
+  }
 
-    updateSaturdayTimer();
-    setInterval(updateSaturdayTimer, 1000);
+  // При загрузке страницы — подтягиваем текущее значение
+  fetchMerchCount();
 
-    // --------- ГЛОБАЛЬНЫЙ СЧЁТЧИК МЕРЧА ----------
-    // Используем публичный сервис CountAPI: https://api.countapi.xyz
-    // Простая key-value БД, работает прямо из браузера.
+  // Локальная блокировка кнопки: один раз с этого браузера
+  if (localStorage.getItem(MERCH_LOCAL_KEY) === "1") {
+    setMerchButtonLocked();
+  }
 
-    const MERCH_NAMESPACE = "horusv";
-    const MERCH_KEY = "merch_waiters";
-    const MERCH_LOCAL_KEY = "horus_merch_voted";
+  merchButtonEl.addEventListener("click", async () => {
+    if (merchButtonEl.disabled) return;
 
-    const merchCountEl = document.getElementById("merch-count");
-    const merchButtonEl = document.getElementById("merch-button");
-    const merchBarInnerEl = document.getElementById("merch-bar-inner");
+    await incrementMerchCount();
+    localStorage.setItem(MERCH_LOCAL_KEY, "1");
+    setMerchButtonLocked();
+  });
 
-    const MERCH_TARGET = 10000;
+  // --------- СНЕГ ---------
+  function createSnowflake() {
+    const span = document.createElement("span");
+    span.className = "snowflake";
+    span.textContent = "✶";
 
-    function setMerchButtonLocked() {
-      merchButtonEl.disabled = true;
-      merchButtonEl.textContent = "Спасибо, ждём вместе!";
-    }
+    const left = Math.random() * 100; // где появится по горизонтали
+    const size = 10 + Math.random() * 10; // 10–20 px
+    const duration = 10 + Math.random() * 10; // 10–20 секунд
+    const xMove = (Math.random() * 40 - 20) + "px"; // чуть в сторону
 
-    function updateMerchBar(value) {
-      const percent = Math.max(0, Math.min(100, (value / MERCH_TARGET) * 100));
-      merchBarInnerEl.style.width = percent + "%";
-    }
+    span.style.left = left + "vw";
+    span.style.fontSize = size + "px";
+    span.style.animationDuration = duration + "s";
+    span.style.setProperty("--x-move", xMove);
 
-    async function fetchMerchCount() {
-      try {
-        const res = await fetch(`https://api.countapi.xyz/get/${MERCH_NAMESPACE}/${MERCH_KEY}`);
-        if (!res.ok) {
-          // если счётчик ещё не создан — считаем, что 0
-          merchCountEl.textContent = "0";
-          updateMerchBar(0);
-          return;
-        }
-        const data = await res.json();
-        const value = typeof data.value === "number" ? data.value : 0;
-        merchCountEl.textContent = value;
-        updateMerchBar(value);
-      } catch (err) {
-        console.error("Ошибка получения счётчика мерча:", err);
-        merchCountEl.textContent = "?";
-      }
-    }
+    document.body.appendChild(span);
 
-    async function incrementMerchCount() {
-      try {
-        const res = await fetch(`https://api.countapi.xyz/hit/${MERCH_NAMESPACE}/${MERCH_KEY}`);
-        const data = await res.json();
-        const value = typeof data.value === "number" ? data.value : 0;
-        merchCountEl.textContent = value;
-        updateMerchBar(value);
-      } catch (err) {
-        console.error("Ошибка инкремента счётчика мерча:", err);
-      }
-    }
+    setTimeout(() => {
+      span.remove();
+    }, duration * 1000);
+  }
 
-    // При загрузке страницы — подтягиваем текущее значение
-    fetchMerchCount();
+  // немного снежинок сразу
+  for (let i = 0; i < 15; i++) {
+    setTimeout(createSnowflake, i * 300);
+  }
 
-    // Локальная блокировка кнопки: один раз с этого браузера
-    if (localStorage.getItem(MERCH_LOCAL_KEY) === "1") {
-      setMerchButtonLocked();
-    }
+  // и постоянный снег
+  setInterval(createSnowflake, 700);
+</script>
 
-    merchButtonEl.addEventListener("click", async () => {
-      if (merchButtonEl.disabled) return;
-
-      await incrementMerchCount();
-      localStorage.setItem(MERCH_LOCAL_KEY, "1");
-      setMerchButtonLocked();
-    });
-  </script>
 </body>
 </html>
