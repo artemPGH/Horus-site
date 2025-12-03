@@ -6,239 +6,898 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="Horus V — закрытый сюжетный Minecraft-сервер с лором, событиями и отбором через тест. Узнай, как попасть в сезон."
+    content="Horus V — камерный сюжетный SMP без доната, с лором, ивентами и строгим отбором игроков."
   />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" href="horus-logo.png" type="image/png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
+
+  <!-- Шрифт -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #020617;
+      --bg-darker: #020014;
+      --accent: #8b5cf6;
+      --accent-soft: #4c1d95;
+      --accent-strong: #a855f7;
+      --safe-green: #22c55e;
+      --danger: #ef4444;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --glow: 0 0 35px rgba(168, 85, 247, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 0% 0%, #1e1b4b 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #4c1d95 0, transparent 55%),
+        radial-gradient(circle at 50% 0%, #111827 0, #020617 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* декоративные линии */
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(120deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(210deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8));
+      background-size: 120px 120px, 100% 100%;
+      mix-blend-mode: soft-light;
+      opacity: 0.35;
+      z-index: -2;
+    }
+
+    body::after {
+      background-image:
+        radial-gradient(circle at 10% 90%, rgba(236, 72, 153, 0.15), transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.12), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* контейнер */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    /* NAVBAR */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      position: sticky;
+      top: 0;
+      padding: 10px 0;
+      backdrop-filter: blur(24px);
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), transparent);
+      z-index: 20;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--glow);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: var(--text-muted);
+      padding-bottom: 3px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, #a855f7, #22c55e);
+      transition: width 0.2s ease-out;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 4vw, 40px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 16px;
+      text-shadow: 0 0 28px rgba(15, 23, 42, 0.9);
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, #e5e7eb, #c4b5fd, #a855f7);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 520px;
+      margin-bottom: 20px;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      font-size: 11px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at 0 0, rgba(129, 140, 248, 0.25), rgba(15, 23, 42, 0.9));
+      backdrop-filter: blur(16px);
+    }
+
+    .badge-strong {
+      border-color: rgba(248, 250, 252, 0.6);
+      background: radial-gradient(circle at 0 0, rgba(251, 113, 133, 0.35), rgba(15, 23, 42, 0.95));
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: #020617;
+      background: linear-gradient(130deg, #a855f7, #f97316, #ecfeff);
+      box-shadow:
+        0 0 0 1px rgba(251, 113, 133, 0.5),
+        0 16px 40px rgba(168, 85, 247, 0.7);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 0 0 1px rgba(251, 113, 133, 0.7),
+        0 22px 55px rgba(168, 85, 247, 0.9);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn-secondary span {
+      font-size: 16px;
+    }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .hero-art {
+      position: relative;
+    }
+
+    .hero-logo-card {
+      border-radius: 28px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 0 0, rgba(129, 140, 248, 0.45), rgba(15, 23, 42, 0.97));
+      box-shadow: 0 32px 80px rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-logo-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, rgba(244, 63, 94, 0.35), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.25), transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-logo-inner {
+      border-radius: 20px;
+      overflow: hidden;
+      background: #020617;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.85);
+    }
+
+    .hero-logo-inner img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .hero-meta strong {
+      color: #e5e7eb;
+    }
+
+    .hero-glow-orbit {
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0, rgba(251, 113, 133, 0.3), transparent 55%),
+        radial-gradient(circle at 100% 80%, rgba(59, 130, 246, 0.28), transparent 60%);
+      mix-blend-mode: screen;
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* НОВОГОДНИЙ баннер */
+    .newyear-banner {
+      margin: 26px 0 32px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(252, 211, 77, 0.6);
+      background:
+        linear-gradient(120deg, rgba(234, 179, 8, 0.07), rgba(248, 250, 252, 0.03)),
+        radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.08), transparent 60%);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .newyear-emoji {
+      font-size: 20px;
+    }
+
+    .newyear-title {
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    /* секции */
+    section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.icon {
+      font-size: 18px;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
+      font-size: 13px;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .card li::before {
+      content: "◆";
+      color: var(--accent-strong);
+      margin-right: 6px;
+      font-size: 9px;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* Правила и FAQ */
+    .rules-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      font-size: 13px;
+    }
+
+    details.faq {
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 8px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.85);
+      font-size: 13px;
+    }
+
+    details.faq summary {
+      cursor: pointer;
+      list-style: none;
+      font-weight: 500;
+    }
+
+    details.faq summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.faq summary::after {
+      content: "▾";
+      float: right;
+      opacity: 0.7;
+    }
+
+    details.faq[open] summary::after {
+      transform: rotate(180deg);
+    }
+
+    details.faq p {
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
+    /* Отбор / трейлер */
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 250, 252, 0.5);
+      background: radial-gradient(circle at 0 0, rgba(248, 250, 252, 0.25), rgba(15, 23, 42, 0.96));
+    }
+
+    .timer-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 13px;
+    }
+
+    .timer-value {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    .yt-wrapper {
+      margin-top: 16px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.95);
+    }
+
+    .yt-wrapper iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+    }
+
+    .link-clean {
+      color: #c4b5fd;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+
+    /* Мерч */
+    .merch-section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .merch-card {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .merch-bg {
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 0 100%, rgba(251, 191, 36, 0.24), transparent 55%),
+        radial-gradient(circle at 100% 0, rgba(244, 63, 94, 0.16), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .merch-counter {
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .merch-counter strong {
+      font-size: 18px;
+      color: #fbbf24;
+      text-shadow: 0 0 22px rgba(234, 179, 8, 0.8);
+    }
+
+    .merch-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-merch {
+      margin-top: 8px;
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      background: linear-gradient(120deg, #f97316, #facc15);
+      color: #111827;
+      box-shadow: 0 18px 42px rgba(248, 181, 30, 0.85);
+    }
+
+    .btn-merch:disabled {
+      opacity: 0.7;
+      cursor: default;
+      box-shadow: none;
+      background: linear-gradient(120deg, #4b5563, #9ca3af);
+      color: #e5e7eb;
+    }
+
+    .merch-progress {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .merch-bar {
+      margin-top: 6px;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .merch-bar-inner {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #facc15, #f97316, #ef4444);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.9);
+      transition: width 0.4s ease-out;
+    }
+
+    .merch-aside {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .merch-aside strong {
+      color: #e5e7eb;
+    }
+
+    footer {
+      margin-top: 32px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding-top: 14px;
+    }
+
+    @media (max-width: 880px) {
+      .hero,
+      .merch-card {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        gap: 26px;
+      }
+      .hero-art {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        display: none;
+      }
+      .page {
+        padding-inline: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Фоновый декор -->
-  <div class="hv-bg-decor"></div>
-
-  <!-- Шапка -->
-  <header class="hv-header">
-    <div class="hv-container hv-header-inner">
-      <div class="hv-logo">
-        <img src="horus-logo.png" alt="Horus V" class="hv-logo-img" />
-        <span class="hv-logo-text">Horus V</span>
+  <div class="page">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="logo">
+          <!-- Положи рядом в репозитории файл logo-horus.png -->
+          <img src="logo-horus.png" alt="Horus V" />
+        </div>
+        <div>
+          <div class="brand-title">HORUS&nbsp;V</div>
+          <div class="brand-sub">minecraft lore smp</div>
+        </div>
       </div>
-
-      <nav class="hv-nav">
+      <nav class="nav-links">
         <a href="#about">О сервере</a>
-        <a href="#season">Сезон и лор</a>
+        <a href="#season">Сезон</a>
         <a href="#rules">Правила</a>
-        <a href="#merch">Мерч</a>
         <a href="#faq">FAQ</a>
-        <a href="#trailer">Трейлер</a>
-        <a href="#apply" class="hv-nav-cta">Отбор</a>
+        <a href="#selection">Отбор</a>
+        <a href="#merch">Мерч</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main>
     <!-- HERO -->
-    <section class="hv-hero" id="top">
-      <div class="hv-hero-overlay"></div>
-      <div class="hv-container hv-hero-inner">
-        <div class="hv-hero-main">
-          <div class="hv-ny-banner">
-            🎄 Horus отмечает Новый год!  
-            <span class="hv-ny-sub">зимний ресурс-пак, ёлка и особые ивенты</span>
-          </div>
+    <section class="hero">
+      <div>
+        <h1 class="hero-title">
+          Сюжетный <span>Horus V</span> — атмосфера важнее доната
+        </h1>
+        <p class="hero-subtitle">
+          Камерный SMP с лором, ивентами и наблюдающими Смотрителями. Без донат-приватов, с отбором через тест
+          и живыми съёмками для сериала.
+        </p>
 
-          <p class="hv-pill">Закрытый сюжетный сервер Minecraft</p>
-          <h1 class="hv-hero-title">
-            Horus V — сезон, где лор важнее доната
-          </h1>
-          <p class="hv-hero-subtitle">
-            Участники — не просто игроки, а персонажи истории.  
-            События, выборы и финал сезона зависят от людей на сервере.
-          </p>
-
-          <div class="hv-hero-actions" id="apply">
-            <button class="hv-btn hv-btn-primary hv-btn-disabled" type="button">
-              Скоро: пройти отбор в Telegram
-            </button>
-            <button
-              class="hv-btn hv-btn-ghost"
-              type="button"
-              onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})"
-            >
-              Узнать больше
-            </button>
-          </div>
-
-          <p class="hv-hero-note">
-            Сейчас мы готовим Telegram-бота для отбора на сервер.  
-            Следить за новостями и датой открытия набора можно на
-            <a
-              href="https://www.youtube.com/@ArtemStudio-new"
-              target="_blank"
-              rel="noopener"
-              >YouTube-канале ArtemStudio</a
-            >.
-          </p>
-
-          <!-- Таймер до субботы -->
-          <div class="hv-countdown-card">
-            <div class="hv-countdown-title">
-              ⏰ До следующей субботы на Horus V:
-            </div>
-            <div class="hv-countdown-values" id="hv-countdown">
-              <div class="hv-countdown-item">
-                <span class="hv-count-number" id="hv-days">0</span>
-                <span class="hv-count-label">дней</span>
-              </div>
-              <div class="hv-countdown-item">
-                <span class="hv-count-number" id="hv-hours">00</span>
-                <span class="hv-count-label">часов</span>
-              </div>
-              <div class="hv-countdown-item">
-                <span class="hv-count-number" id="hv-mins">00</span>
-                <span class="hv-count-label">минут</span>
-              </div>
-              <div class="hv-countdown-item">
-                <span class="hv-count-number" id="hv-secs">00</span>
-                <span class="hv-count-label">секунд</span>
-              </div>
-            </div>
-            <p class="hv-muted hv-countdown-note">
-              Когда таймер достигает нуля, он автоматически начинает отсчёт до
-              следующей субботы.
-            </p>
-          </div>
-
-          <div class="hv-meta-strip">
-            <div class="hv-meta-item">
-              <span class="hv-meta-label">Формат</span>
-              <span class="hv-meta-value">сюжетный SMP без приватов и грядок 24/7</span>
-            </div>
-            <div class="hv-meta-item">
-              <span class="hv-meta-label">Онлайн</span>
-              <span class="hv-meta-value">небольшие, но активные созвоны и ивенты</span>
-            </div>
-            <div class="hv-meta-item">
-              <span class="hv-meta-label">Возраст</span>
-              <span class="hv-meta-value">важнее адекватность, чем цифра в паспорте</span>
-            </div>
-          </div>
+        <div class="hero-badges">
+          <div class="badge badge-strong">Сервер-история, а не выживание 24/7</div>
+          <div class="badge">Мало слотов, все друг друга знают</div>
+          <div class="badge">Ивенты, лор, сюрпризы каждую субботу</div>
         </div>
 
-        <aside class="hv-hero-side">
-          <div class="hv-card hv-card-status">
-            <p class="hv-card-label">Статус набора</p>
-            <p class="hv-status-tag hv-status-wait">
-              ⏳ Подготовка отбора
-            </p>
-            <p class="hv-card-text">
-              Сервер уже живёт своей жизнью, но новые игроки будут добавляться
-              только через Telegram-бота с тестом. Как только он запустится,
-              здесь появится активная кнопка.
-            </p>
-          </div>
-
-          <div class="hv-card hv-card-links">
-            <p class="hv-card-label">Сериал Horus V</p>
-            <ul class="hv-link-list">
-              <li>
-                <a
-                  href="https://www.youtube.com/@ArtemStudio-new"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  ▶ YouTube-канал ArtemStudio
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.youtube.com/watch?v=ceHUeVh0VdU"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  🎬 Трейлер сезона
-                </a>
-              </li>
-            </ul>
-            <p class="hv-muted">
-              Перед тем как подавать заявку, лучше увидеть сервер глазами сериала.
-            </p>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- О сервере -->
-    <section class="hv-section" id="about">
-      <div class="hv-container hv-grid-2">
-        <div>
-          <h2>О сервере Horus V</h2>
-          <p>
-            Horus V — это не «ещё один» паблик с приватом спавна и
-            бесконечными вайпами. Это небольшой закрытый сервер, где:
-          </p>
-          <ul class="hv-list">
-            <li>все знают друг друга по голосу, а не по никам в табе;</li>
-            <li>локации, события и постройки завязаны на общий лор сезона;</li>
-            <li>решения игроков реально меняют мир (барьеры, ивенты, роли);</li>
-            <li>читам, дюпам и токсичности нет места вообще.</li>
-          </ul>
-          <p>
-            Сервер существует ради истории и атмосферы.  
-            Ты не покупаешь слот — ты становишься частью повествования.
-          </p>
-        </div>
-
-        <div class="hv-card hv-card-highlight">
-          <h3>Чем мы отличаемся от обычных SMP</h3>
-          <ul class="hv-list">
-            <li><strong>Сюжет.</strong> Есть общий сезонный лор и скрытые линии.</li>
-            <li><strong>Роли.</strong> Невидимки, охотники, Смотрители и другие сущности.</li>
-            <li><strong>Ручной отбор.</strong> На сервер не попадают случайные люди с пабликов.</li>
-            <li><strong>Ивенты.</strong> Барьеры, метеориты, открытия миров, спец-события.</li>
-          </ul>
-          <p class="hv-muted">
-            Если тебе интересны спокойные «фермы и грядки» — тебе в другое место.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Трейлер -->
-    <section class="hv-section hv-section-alt" id="trailer">
-      <div class="hv-container hv-grid-2">
-        <div>
-          <h2>Трейлер сериала Horus V</h2>
-          <p>
-            Хочешь быстро понять атмосферу сервера?  
-            Посмотри официальный трейлер сезона — там и барьеры, и лор, и общее настроение.
-          </p>
-          <p class="hv-muted">
-            Больше серий, вырезок и ивентов — на канале
-            <a
-              href="https://www.youtube.com/@ArtemStudio-new"
-              target="_blank"
-              rel="noopener"
-              >ArtemStudio</a
-            >.
-          </p>
-          <a
-            class="hv-btn hv-btn-secondary"
-            href="https://www.youtube.com/@ArtemStudio-new"
-            target="_blank"
-            rel="noopener"
-          >
-            Перейти на YouTube-канал
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="document.getElementById('selection').scrollIntoView({behavior:'smooth'})">
+            Пройти отбор в Telegram
+          </button>
+          <a class="btn-secondary" href="#trailer">
+            <span>▶</span> Посмотреть трейлер
           </a>
         </div>
+        <p class="hero-note">
+          Бот с тестом ещё в разработке. Пока можно просто следить за новостями и готовиться.
+        </p>
+      </div>
 
-        <div class="hv-trailer-frame">
-          <div class="hv-video-wrapper">
+      <div class="hero-art">
+        <div class="hero-glow-orbit"></div>
+        <div class="hero-logo-card">
+          <div class="hero-logo-inner">
+            <img src="logo-horus.png" alt="Horus V логотип" />
+          </div>
+          <div class="hero-meta">
+            <span>Сезон V — «Аграба Уничтожения»</span>
+            <span>Смотрители наблюдают за игроками…</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- НОВЫЙ ГОД -->
+    <div class="newyear-banner">
+      <div class="newyear-emoji">🎄</div>
+      <div>
+        <div class="newyear-title">Horus V отмечает Новый год!</div>
+        <div>
+          На сервере уже стоит ёлка, падают метеориты и готовятся праздничные ивенты.  
+          Весь зимний сезон идёт в снегопадном ресурс-паке.
+        </div>
+      </div>
+    </div>
+
+    <!-- О сервере -->
+    <section id="about">
+      <h2 class="section-title"><span class="icon">🌌</span>О сервере</h2>
+      <p class="section-sub">
+        Horus V — это закрытый сюжетный сервер по Minecraft. Мы не продаём донат-привилегии, не делаем «/rtp»
+        и бессмысленные квесты. Вместо этого — небольшое комьюнити, лор, постоянные съёмки и события,
+        которые влияют на карту и сюжет.
+      </p>
+
+      <div class="cards-grid">
+        <article class="card">
+          <h3>Чем отличаемся от обычных SMP</h3>
+          <ul>
+            <li>Нет приватов и донат-богов, решения принимаются игроками и лором.</li>
+            <li>Мир ограничен барьером, который расширяется на ивентах.</li>
+            <li>Каждую субботу — сюжетный эвент с механиками и визуальными эффектами.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Комьюнити</h3>
+          <ul>
+            <li>Небольшой онлайн, все друг друга знают по голосу и никам.</li>
+            <li>Адекватность и уважение важнее возраста в паспорте.</li>
+            <li>Сервер живёт как сериал: каждый игрок — персонаж истории.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h3>Техническая часть</h3>
+          <ul>
+            <li>Fabric + оптимизационные моды, без читов и X-ray.</li>
+            <li>Отдельные настройки для обычного мира и ада (границы, эффекты).</li>
+            <li>Кастомные ивенты через команды: метеориты, сообщения Смотрителей и т.п.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Сезон и лор -->
+    <section id="season">
+      <h2 class="section-title"><span class="icon">📜</span>Текущий сезон и лор</h2>
+      <p class="section-sub">
+        Сейчас идёт 5-й сезон «Аграба Уничтожения». Над миром нависли Смотрители — существа, которые наблюдают за игроками
+        и периодически вмешиваются: расширяют барьер, шлют послания и сбрасывают метеориты.
+      </p>
+
+      <div class="cards-grid">
+        <article class="card">
+          <h3>Что уже знают игроки</h3>
+          <ul>
+            <li>Существуют Смотрители, но никто не видел их напрямую.</li>
+            <li>Невидимка умеет выходить за барьер, но цена за это до конца не понятна.</li>
+            <li>Охотник появился из ниоткуда и охотится за Невидимкой.</li>
+          </ul>
+          <p class="muted">
+            Без спойлеров: на сервере много того, о чём ещё никто не догадался.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Ближайшие события</h3>
+          <ul>
+            <li>Следующая суббота — расширение барьера и новое вмешательство Смотрителей.</li>
+            <li>Метеорит оставил кратер и послание, дальше будет только жёстче.</li>
+            <li>Ад постепенно перестаёт быть безопасным убежищем.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Правила -->
+    <section id="rules">
+      <h2 class="section-title"><span class="icon">⚖️</span>Правила и требования</h2>
+      <p class="section-sub">
+        У нас нет огромного свода правил, но есть несколько жёстких требований. Если по ним ок — дальше всё решает лор.
+      </p>
+
+      <div class="rules-list">
+        <div class="card">
+          <h3>Основное</h3>
+          <ul>
+            <li>Без читов, макросов и ресурс-паков, дающих преимущество.</li>
+            <li>Нет реального скама, угроз и токсичности вне рп-ситуаций.</li>
+            <li>Умение принимать поражения и сюжетные повороты.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Технические требования</h3>
+          <ul>
+            <li>Стабильный интернет и нормальный микрофон.</li>
+            <li>Готовность заходить в голос в важные моменты.</li>
+            <li>Желательно уметь записывать видео/реплеи (для ивентов и сериала).</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Что мы ожидаем</h3>
+          <ul>
+            <li>Инициативу: строить, придумывать, предлагать идеи для лора.</li>
+            <li>Готовность к долгой игре — сезон планируется надолго.</li>
+            <li>Адекватное поведение в чате и в голосе, без клоунады 24/7.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2 class="section-title"><span class="icon">❓</span>FAQ</h2>
+      <p class="section-sub">
+        Коротко закрываем самые частые вопросы. Остальное можно будет спросить в Telegram.
+      </p>
+
+      <details class="faq">
+        <summary>Какая версия Minecraft?</summary>
+        <p>Сейчас сервер работает на версии 1.21.1 (Fabric). Для входа нужен лицензионный клиент с нужными модами.</p>
+      </details>
+
+      <details class="faq">
+        <summary>Можно ли зайти без микрофона?</summary>
+        <p>Технически да, но на ивенты и важные моменты без голоса — тяжело. Мы всё равно отдаём приоритет тем, кто готов общаться.</p>
+      </details>
+
+      <details class="faq">
+        <summary>Сколько длится сезон?</summary>
+        <p>План — играть долго, минимум год, с постепенным развитием истории и территории.</p>
+      </details>
+
+      <details class="faq">
+        <summary>Будет ли вайп?</summary>
+        <p>Только по завершению крупной сюжетной арки. Всё, что вы делаете, имеет вес и может попасть в сериал.</p>
+      </details>
+    </section>
+
+    <!-- Отбор + трейлер -->
+    <section id="selection">
+      <h2 class="section-title"><span class="icon">🎯</span>Отбор на сервер</h2>
+      <p class="section-sub">
+        Набор идёт волнами. Чтобы попасть на Horus V, нужно пройти небольшой тест-бот в Telegram и показать, что вы понимаете формат.
+      </p>
+
+      <div class="cards-grid">
+        <article class="card" id="selection-card">
+          <h3>Статус набора</h3>
+          <p class="muted">Сейчас:</p>
+          <div class="status-chip">
+            ⏳ Подготовка отбора
+          </div>
+          <p class="muted" style="margin-top:8px;">
+            Бот с тестом ещё в разработке. Как только он запустится, здесь появится активная ссылка.
+          </p>
+
+          <div class="timer-box">
+            <div class="muted">До следующей сюжетной субботы:</div>
+            <div class="timer-value" id="saturday-timer">…</div>
+          </div>
+
+          <p class="muted" style="margin-top:8px;">
+            Даже если вы пока не можете зайти, имеет смысл следить за лором — так будет проще пройти отбор.
+          </p>
+        </article>
+
+        <article class="card" id="trailer">
+          <h3>Сериал Horus V</h3>
+          <p class="muted">
+            Перед тем как подавать заявку, лучше увидеть сервер глазами сериала.
+          </p>
+          <ul style="margin-top:8px;">
+            <li>
+              YouTube-канал: <a class="link-clean" href="https://www.youtube.com/@ArtemStudio-new" target="_blank" rel="noopener noreferrer">@ArtemStudio-new</a>
+            </li>
+            <li>
+              Трейлер сезона:
+              <a class="link-clean" href="https://www.youtube.com/watch?v=ceHUeVh0VdU" target="_blank" rel="noopener noreferrer">
+                посмотреть на YouTube
+              </a>
+            </li>
+          </ul>
+          <div class="yt-wrapper" style="margin-top:10px;">
             <iframe
               src="https://www.youtube.com/embed/ceHUeVh0VdU"
               title="Трейлер Horus V"
@@ -247,380 +906,177 @@
               allowfullscreen
             ></iframe>
           </div>
-        </div>
+        </article>
       </div>
     </section>
 
-    <!-- Сезон и лор -->
-    <section class="hv-section" id="season">
-      <div class="hv-container hv-grid-2">
+    <!-- MERCH -->
+    <section id="merch" class="merch-section">
+      <div class="merch-bg"></div>
+      <h2 class="section-title"><span class="icon">🧥</span>Horus-мерч</h2>
+      <p class="section-sub">
+        У нас есть планы на худи, стикеры и, возможно, фигурки по событиям сезона. Но запускать магазин раньше времени не хочется.
+      </p>
+
+      <div class="card merch-card">
         <div>
-          <h2>Текущий сезон и лор (без спойлеров)</h2>
+          <h3>Когда откроется мерч?</h3>
           <p>
-            Сейчас идёт сезон Horus V. Игроки живут в ограниченном мире, за
-            границами которого — неизвестность и Смотрители, наблюдающие за
-            каждым шагом.
+            Как только о сервере узнают <strong>10&nbsp;000 человек</strong>, мы подготовим полноценный магазин с доставкой
+            и отдельным лором вокруг вещей.
           </p>
-          <p>
-            На сервере уже засветились:
-          </p>
-          <ul class="hv-list">
-            <li>Невидимка, который способен выходить за границы мира;</li>
-            <li>Охотник в незеритке, ведущий свою игру;</li>
-            <li>метеориты и другие сигналы от тех, кто наблюдает сверху.</li>
-          </ul>
-          <p class="hv-muted">
-            Подробности игроки узнают в процессе — мы не раскрываем спойлеры
-            заранее, чтобы сохранить эффект неожиданности.
-          </p>
-        </div>
 
-        <div class="hv-card hv-card-timeline">
-          <h3>Как развивается сезон</h3>
-          <ul class="hv-timeline">
-            <li>
-              <div class="hv-timeline-dot"></div>
-              <div class="hv-timeline-content">
-                <h4>Старт сезона</h4>
-                <p>Маленький мир, барьер, базовый лут и первые знакомства.</p>
-              </div>
-            </li>
-            <li>
-              <div class="hv-timeline-dot"></div>
-              <div class="hv-timeline-content">
-                <h4>Расширения барьера</h4>
-                <p>
-                  Игроки своими действиями добиваются расширения мира и
-                  открытия новых локаций.
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="hv-timeline-dot"></div>
-              <div class="hv-timeline-content">
-                <h4>Скрытые ивенты</h4>
-                <p>
-                  Наблюдатели вмешиваются: метеориты, испытания, записки и
-                  странные существа.
-                </p>
-              </div>
-            </li>
-            <li>
-              <div class="hv-timeline-dot"></div>
-              <div class="hv-timeline-content">
-                <h4>Финал сезона</h4>
-                <p>
-                  Развязка зависит от игроков. Финал не прописан заранее — он
-                  складывается из решений людей.
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Правила и требования -->
-    <section class="hv-section hv-section-alt" id="rules">
-      <div class="hv-container hv-grid-2">
-        <div>
-          <h2>Правила сервера</h2>
-          <p>
-            Набор небольшой, поэтому требования жёстче, чем на обычных
-            пабликах. Базово:
+          <p class="merch-counter">
+            Сейчас нас ждут: <strong id="merch-count">0</strong> человек.
           </p>
-          <ul class="hv-list">
-            <li>запрещены читы, макросы, дюпы, x-ray и любые преимущества;</li>
-            <li>нет грифа ради грифа, токсичности и личных наездов;</li>
-            <li>уважение к лору, ивентам и труду других игроков;</li>
-            <li>готовность играть не только «для себя», но и для истории.</li>
-          </ul>
-          <p class="hv-muted">
-            Мы оставляем за собой право отказать без объяснения причин, если
-            чувствуем, что человек не подходит по атмосфере.
-          </p>
-        </div>
 
-        <div class="hv-card hv-card-highlight">
-          <h3>Что нужно, чтобы подать заявку</h3>
-          <ol class="hv-list hv-list-ordered">
-            <li>Посмотреть хотя бы несколько серий Horus V.</li>
-            <li>Прочитать эту страницу до конца.</li>
-            <li>
-              Дождаться запуска Telegram-бота отбора (мы объявим об этом в
-              роликах и в описании под ними).
-            </li>
-            <li>
-              Честно пройти тест и дождаться ответа — заявки проверяются
-              вручную.
-            </li>
-          </ol>
-          <button class="hv-btn hv-btn-secondary hv-btn-block hv-btn-disabled" type="button">
-            Telegram-бот отбора скоро откроется
+          <button id="merch-button" class="btn-merch">
+            Я тоже жду мерч
           </button>
-          <p class="hv-muted hv-muted-small">
-            Как только бот будет готов, ссылка появится здесь и в описании под роликами.
-          </p>
-        </div>
-      </div>
-    </section>
 
-    <!-- МЕРЧ -->
-    <section class="hv-section" id="merch">
-      <div class="hv-container hv-grid-2">
-        <div>
-          <h2>Будущий мерч Horus V</h2>
+          <p class="merch-note">
+            Кнопка работает один раз с этого устройства. Чисто, чтобы не накрутить руками.
+          </p>
+
+          <div class="merch-progress">
+            Прогресс до цели:
+            <div class="merch-bar">
+              <div id="merch-bar-inner" class="merch-bar-inner"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="merch-aside">
           <p>
-            Мы хотим делать мерч только тогда, когда о сервере узнает
-            достаточно людей. Без лишнего «шопа» и детских принтов — только то,
-            что реально хочется носить.
+            Это эксперимент: мы хотим понять, насколько сообществу реально интересно оффлайн-продолжение сервера.
+            Счётчик общий для всех и хранится на внешнем сервисе.
           </p>
-          <p>
-            Цель простая: когда о Horus V узнают <strong>10&nbsp;000 человек</strong>,
-            мы откроем отдельный магазин с мерчем.
-          </p>
-          <p class="hv-muted">
-            Счётчик ниже — это наша цель. Один человек = один голос с устройства.
-          </p>
-        </div>
-
-        <div class="hv-card hv-card-merch">
-          <h3>Счётчик «ждущих мерч»</h3>
-          <p class="hv-merch-counter">
-            <span id="hv-merch-count">0</span>
-            <span class="hv-merch-divider">/</span>
-            <span>10&nbsp;000</span>
-          </p>
-          <button
-            id="hv-merch-button"
-            class="hv-btn hv-btn-primary hv-btn-block"
-            type="button"
-          >
-            Я жду мерч Horus V
-          </button>
-          <p class="hv-muted hv-merch-note" id="hv-merch-note">
-            Твой голос учитывается один раз с этого устройства.
+          <p style="margin-top:8px;">
+            Когда цифра дойдёт до 10&nbsp;000, на этом сайте появится ссылка на магазин и отдельная страница лора про «Horus Merch».
           </p>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="hv-section" id="faq">
-      <div class="hv-container">
-        <h2>FAQ — часто задаваемые вопросы</h2>
-        <div class="hv-faq-grid">
-          <details class="hv-faq-item">
-            <summary>Это сервер с модами или ваниль?</summary>
-            <p>
-              Основа — ванильная механика, плюс несколько аккуратных модов
-              для качества жизни, голоса и атмосферы. Баланс не ломаем.
-            </p>
-          </details>
-
-          <details class="hv-faq-item">
-            <summary>Можно зайти просто «побегать» без участия в лоре?</summary>
-            <p>
-              Можно, но неинтересно. Сервер строится вокруг истории, поэтому
-              те, кто игнорируют лор и ивенты, долго не задерживаются.
-            </p>
-          </details>
-
-          <details class="hv-faq-item">
-            <summary>Есть ли возрастные ограничения?</summary>
-            <p>
-              Формального ограничения нет, но мы смотрим на адекватность,
-              общение и отношение к другим. Если ты можешь спокойно общаться
-              и уважать границы — welcome.
-            </p>
-          </details>
-
-          <details class="hv-faq-item">
-            <summary>Когда откроется отбор через бота?</summary>
-            <p>
-              После техперерыва и подготовки ближайших событий сезона.
-              Объявление будет в новых роликах на
-              <a
-                href="https://www.youtube.com/@ArtemStudio-new"
-                target="_blank"
-                rel="noopener"
-                >канале ArtemStudio</a
-              >.
-            </p>
-          </details>
-
-          <details class="hv-faq-item">
-            <summary>Можно ли попасть на сервер по знакомству?</summary>
-            <p>
-              Нет. Даже друзья проходят тест и обсуждение. Это важно, чтобы
-              сохранить атмосферу и не превратить сервер в обычный «общак».
-            </p>
-          </details>
-
-          <details class="hv-faq-item">
-            <summary>Сколько длится сезон Horus V?</summary>
-            <p>
-              Сезон планируется как долгий — не пара недель.  
-              Финальную точку мы ставим тогда, когда история естественно
-              приходит к развязке.
-            </p>
-          </details>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Футер -->
-  <footer class="hv-footer">
-    <div class="hv-container hv-footer-inner">
-      <span>© Horus V, <span id="hv-year"></span></span>
-      <span class="hv-footer-links">
-        <a
-          href="https://www.youtube.com/@ArtemStudio-new"
-          target="_blank"
-          rel="noopener"
-          >YouTube-канал ArtemStudio</a
-        >
-      </span>
-    </div>
-  </footer>
+    <footer>
+      Horus V · неофициальный фан-проект по Minecraft. Mojang и Microsoft не имеют отношения к данному серверу.
+    </footer>
+  </div>
 
   <script>
-    // ===== год в футере =====
-    document.getElementById("hv-year").textContent = new Date().getFullYear();
+    // --------- ТАЙМЕР ДО СУББОТЫ 19:00 ----------
+    function getNextSaturday19() {
+      const now = new Date();
+      const result = new Date(now);
+      const day = now.getDay(); // 0 - воскресенье, 6 - суббота
 
-    // ===== таймер до следующей субботы 19:00 (локальное время) =====
-    function getNextSaturday1900(now) {
-      const target = new Date(now);
-      const day = target.getDay(); // 0 - вс, 6 - сб
-      let daysToAdd = (6 - day + 7) % 7;
-      if (
-        daysToAdd === 0 &&
-        (target.getHours() > 19 ||
-          (target.getHours() === 19 &&
-            (target.getMinutes() > 0 || target.getSeconds() > 0)))
-      ) {
-        daysToAdd = 7;
+      let daysToAdd = (6 - day + 7) % 7; // сколько дней до ближайшей субботы
+      result.setDate(now.getDate() + daysToAdd);
+      result.setHours(19, 0, 0, 0);
+
+      // если уже позже 19:00 в субботу — берём субботу следующей недели
+      if (result <= now) {
+        result.setDate(result.getDate() + 7);
       }
-      target.setDate(target.getDate() + daysToAdd);
-      target.setHours(19, 0, 0, 0);
-      return target;
+
+      return result;
     }
 
-    function startCountdown() {
-      function update() {
-        const now = new Date();
-        const target = getNextSaturday1900(now);
-        const diff = target - now;
-        if (diff <= 0) return;
+    const saturdayTimerEl = document.getElementById("saturday-timer");
+    let nextSaturday = getNextSaturday19();
 
-        const totalSeconds = Math.floor(diff / 1000);
-        const days = Math.floor(totalSeconds / (24 * 3600));
-        const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
-        const mins = Math.floor((totalSeconds % 3600) / 60);
-        const secs = totalSeconds % 60;
-
-        document.getElementById("hv-days").textContent = String(days);
-        document.getElementById("hv-hours").textContent = String(hours).padStart(2, "0");
-        document.getElementById("hv-mins").textContent = String(mins).padStart(2, "0");
-        document.getElementById("hv-secs").textContent = String(secs).padStart(2, "0");
+    function updateSaturdayTimer() {
+      const now = new Date();
+      if (now >= nextSaturday) {
+        nextSaturday = getNextSaturday19();
       }
 
-      update();
-      setInterval(update, 1000);
+      const diffMs = nextSaturday - now;
+      const totalSeconds = Math.max(0, Math.floor(diffMs / 1000));
+
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      saturdayTimerEl.textContent =
+        `${days}д ${hours.toString().padStart(2, "0")}ч ` +
+        `${minutes.toString().padStart(2, "0")}м ${seconds.toString().padStart(2, "0")}с`;
     }
 
-    startCountdown();
+    updateSaturdayTimer();
+    setInterval(updateSaturdayTimer, 1000);
 
-    // ===== счётчик «ждущих мерч» =====
-    (function () {
-      const GOAL = 10000;
+    // --------- ГЛОБАЛЬНЫЙ СЧЁТЧИК МЕРЧА ----------
+    // Используем публичный сервис CountAPI: https://api.countapi.xyz
+    // Простая key-value БД, работает прямо из браузера.
 
-      // TODO: Поменяй на URL своего бэкенда, когда он появится
-      const API_BASE = "https://your-merch-counter.example.com";
+    const MERCH_NAMESPACE = "horusv";
+    const MERCH_KEY = "merch_waiters";
+    const MERCH_LOCAL_KEY = "horus_merch_voted";
 
-      const VOTED_KEY = "hv-merch-voted"; // 1 раз с устройства
-      const LOCAL_TOTAL_KEY = "hv-merch-total-fallback";
+    const merchCountEl = document.getElementById("merch-count");
+    const merchButtonEl = document.getElementById("merch-button");
+    const merchBarInnerEl = document.getElementById("merch-bar-inner");
 
-      const countEl = document.getElementById("hv-merch-count");
-      const btnEl = document.getElementById("hv-merch-button");
-      const noteEl = document.getElementById("hv-merch-note");
+    const MERCH_TARGET = 10000;
 
-      let total = 0;
-      let hasVoted = localStorage.getItem(VOTED_KEY) === "1";
+    function setMerchButtonLocked() {
+      merchButtonEl.disabled = true;
+      merchButtonEl.textContent = "Спасибо, ждём вместе!";
+    }
 
-      function render() {
-        countEl.textContent = total;
-        if (hasVoted) {
-          btnEl.classList.add("hv-btn-disabled");
-          btnEl.disabled = true;
-          noteEl.textContent =
-            "Твой голос уже учтён с этого устройства. Спасибо!";
+    function updateMerchBar(value) {
+      const percent = Math.max(0, Math.min(100, (value / MERCH_TARGET) * 100));
+      merchBarInnerEl.style.width = percent + "%";
+    }
+
+    async function fetchMerchCount() {
+      try {
+        const res = await fetch(`https://api.countapi.xyz/get/${MERCH_NAMESPACE}/${MERCH_KEY}`);
+        if (!res.ok) {
+          // если счётчик ещё не создан — считаем, что 0
+          merchCountEl.textContent = "0";
+          updateMerchBar(0);
+          return;
         }
-        if (total >= GOAL) {
-          noteEl.textContent =
-            "Цель достигнута — следующий шаг за нами. Следи за новостями.";
-        }
+        const data = await res.json();
+        const value = typeof data.value === "number" ? data.value : 0;
+        merchCountEl.textContent = value;
+        updateMerchBar(value);
+      } catch (err) {
+        console.error("Ошибка получения счётчика мерча:", err);
+        merchCountEl.textContent = "?";
       }
+    }
 
-      async function loadGlobalCount() {
-        try {
-          const res = await fetch(API_BASE + "/count", {
-            method: "GET",
-          });
-          if (!res.ok) throw new Error("Bad status: " + res.status);
-          const data = await res.json();
-          if (typeof data.count === "number" && data.count >= 0) {
-            total = data.count;
-            render();
-            return;
-          }
-        } catch (e) {
-          // fallback: локальное значение, чтобы хоть что-то отображалось
-          const stored = parseInt(localStorage.getItem(LOCAL_TOTAL_KEY) || "0", 10);
-          if (!Number.isNaN(stored) && stored >= 0) {
-            total = stored;
-          } else {
-            total = 0;
-          }
-          render();
-        }
+    async function incrementMerchCount() {
+      try {
+        const res = await fetch(`https://api.countapi.xyz/hit/${MERCH_NAMESPACE}/${MERCH_KEY}`);
+        const data = await res.json();
+        const value = typeof data.value === "number" ? data.value : 0;
+        merchCountEl.textContent = value;
+        updateMerchBar(value);
+      } catch (err) {
+        console.error("Ошибка инкремента счётчика мерча:", err);
       }
+    }
 
-      async function sendVote() {
-        hasVoted = true;
-        localStorage.setItem(VOTED_KEY, "1");
+    // При загрузке страницы — подтягиваем текущее значение
+    fetchMerchCount();
 
-        try {
-          const res = await fetch(API_BASE + "/vote", {
-            method: "POST",
-          });
-          if (!res.ok) throw new Error("Bad status: " + res.status);
-          const data = await res.json();
-          if (typeof data.count === "number" && data.count >= 0) {
-            total = data.count;
-          } else {
-            total += 1;
-          }
-        } catch (e) {
-          // fallback: локально увеличиваем
-          const stored = parseInt(localStorage.getItem(LOCAL_TOTAL_KEY) || "0", 10);
-          const newVal = (Number.isNaN(stored) ? 0 : stored) + 1;
-          localStorage.setItem(LOCAL_TOTAL_KEY, String(newVal));
-          total = newVal;
-        }
-        render();
-      }
+    // Локальная блокировка кнопки: один раз с этого браузера
+    if (localStorage.getItem(MERCH_LOCAL_KEY) === "1") {
+      setMerchButtonLocked();
+    }
 
-      btnEl.addEventListener("click", () => {
-        if (hasVoted) return; // защита от повторных нажатий
-        sendVote();
-      });
+    merchButtonEl.addEventListener("click", async () => {
+      if (merchButtonEl.disabled) return;
 
-      // При загрузке страницы
-      render();
-      loadGlobalCount();
-    })();
+      await incrementMerchCount();
+      localStorage.setItem(MERCH_LOCAL_KEY, "1");
+      setMerchButtonLocked();
+    });
   </script>
 </body>
 </html>
