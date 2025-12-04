@@ -983,9 +983,15 @@
       Horus V · неофициальный фан-проект по Minecraft. Mojang и Microsoft не имеют отношения к данному серверу.
     </footer>
   </div>
-
   <script>
-    // --------- ТАЙМЕР ДО СУББОТЫ 19:00 ----------
+    // ================== НАСТРОЙКА FIREBASE ==================
+    // !!! ВАЖНО: сюда вставь СВОЙ URL БАЗЫ, без / на конце
+    const FIREBASE_DB_URL = "https://horus-merch-default-rtdb.europe-west1.firebasedatabase.app";
+  
+    // Путь в базе, где лежит наш счётчик
+    const FIREBASE_MERCH_PATH = "/merchCount";
+  
+    // ================== ТАЙМЕР ДО СУББОТЫ 19:00 ==================
     function getNextSaturday19() {
       const now = new Date();
       const result = new Date(now);
@@ -1028,16 +1034,14 @@
     updateSaturdayTimer();
     setInterval(updateSaturdayTimer, 1000);
   
-    // --------- ГЛОБАЛЬНЫЙ СЧЁТЧИК МЕРЧА (CountAPI) ----------
-    const MERCH_NAMESPACE = "horusv";
-    const MERCH_KEY = "merch_waiters";
+    // ================== ГЛОБАЛЬНЫЙ СЧЁТЧИК МЕРЧА (Firebase) ==================
+  
     const MERCH_LOCAL_KEY = "horus_merch_voted";
+    const MERCH_TARGET = 10000;
   
     const merchCountEl = document.getElementById("merch-count");
     const merchButtonEl = document.getElementById("merch-button");
     const merchBarInnerEl = document.getElementById("merch-bar-inner");
-  
-    const MERCH_TARGET = 10000;
   
     function setMerchButtonLocked() {
       merchButtonEl.disabled = true;
@@ -1049,47 +1053,57 @@
       merchBarInnerEl.style.width = percent + "%";
     }
   
-    async function fetchMerchCount() {
-      try {
-        const res = await fetch(
-          `https://api.countapi.xyz/get/${MERCH_NAMESPACE}/${MERCH_KEY}`
-        );
-        const data = await res.json();
+    async function firebaseGetMerchCount() {
+      const url = `${FIREBASE_DB_URL}${FIREBASE_MERCH_PATH}.json`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("firebase GET failed");
+      }
+      const data = await res.json();
+      // если ещё ничего нет — считаем, что 0
+      const count = typeof data === "number" ? data : 0;
+      return count;
+    }
   
-        if (typeof data.value === "number") {
-          merchCountEl.textContent = data.value;
-          updateMerchBar(data.value);
-        } else {
-          // ключ ещё не создан — считаем что 0
-          merchCountEl.textContent = "0";
-          updateMerchBar(0);
-        }
+    async function firebaseSetMerchCount(newValue) {
+      const url = `${FIREBASE_DB_URL}${FIREBASE_MERCH_PATH}.json`;
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newValue),
+      });
+      if (!res.ok) {
+        throw new Error("firebase PUT failed");
+      }
+      const data = await res.json();
+      return data;
+    }
+  
+    async function fetchMerchCountAndRender() {
+      try {
+        const count = await firebaseGetMerchCount();
+        merchCountEl.textContent = count;
+        merchCountEl.style.color = "#e5e7eb";
+        updateMerchBar(count);
       } catch (err) {
         console.error("Ошибка получения счётчика мерча:", err);
         merchCountEl.textContent = "нет связи";
-        merchCountEl.style.color = "#f97373"; // красным
+        merchCountEl.style.color = "#f97373";
         updateMerchBar(0);
       }
     }
   
     async function incrementMerchCount() {
       try {
-        // update создаёт ключ, если его нет, и прибавляет amount
-        const res = await fetch(
-          `https://api.countapi.xyz/update/${MERCH_NAMESPACE}/${MERCH_KEY}/?amount=1`
-        );
-        const data = await res.json();
-  
-        if (typeof data.value === "number") {
-          merchCountEl.textContent = data.value;
-          merchCountEl.style.color = "#e5e7eb"; // обычный цвет текста
-          updateMerchBar(data.value);
-        } else {
-          console.warn("Странный ответ от CountAPI:", data);
-        }
+        const current = await firebaseGetMerchCount();
+        const next = current + 1;
+        await firebaseSetMerchCount(next);
+        merchCountEl.textContent = next;
+        merchCountEl.style.color = "#e5e7eb";
+        updateMerchBar(next);
       } catch (err) {
         console.error("Ошибка инкремента счётчика мерча:", err);
-        // при ошибке хотя бы локально инкрементнём, чтобы игрок видел результат
+        // на всякий случай хоть локально увеличим
         const current = parseInt(merchCountEl.textContent, 10) || 0;
         const localValue = current + 1;
         merchCountEl.textContent = localValue + " (локально)";
@@ -1098,8 +1112,8 @@
       }
     }
   
-    // стартовое значение счётчика
-    fetchMerchCount();
+    // стартовое значение
+    fetchMerchCountAndRender();
   
     // лок-один-клик-на-браузер
     if (localStorage.getItem(MERCH_LOCAL_KEY) === "1") {
@@ -1114,7 +1128,7 @@
       setMerchButtonLocked();
     });
   
-    // --------- СНЕГ ---------
+    // ================== СНЕГ ==================
     function createSnowflake() {
       const span = document.createElement("span");
       span.className = "snowflake";
@@ -1137,12 +1151,9 @@
       }, duration * 1000);
     }
   
-    // немного снежинок сразу
     for (let i = 0; i < 15; i++) {
       setTimeout(createSnowflake, i * 300);
     }
-  
-    // и постоянный снег
     setInterval(createSnowflake, 700);
   </script>
 </body>
