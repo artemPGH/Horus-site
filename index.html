@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Horus V — сюжетный SMP</title>
+  <title>Horus VI — сюжетный SMP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="Horus V — сюжетный Minecraft SMP с лором, ивентами и отбором через Telegram-бота."
+    content="Horus VI — сюжетный Minecraft SMP с лором, ивентами и отбором через Telegram-бота."
   />
   <style>
     :root {
@@ -630,61 +630,6 @@
       display: block;
     }
 
-    /* Мерч и счётчик */
-
-    .merch-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 18px;
-      align-items: flex-start;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      overflow: hidden;
-      margin-top: 8px;
-    }
-
-    .progress-bar-inner {
-      height: 100%;
-      width: 0%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent-soft), var(--accent-strong));
-      transition: width 0.3s ease;
-    }
-
-    .merch-pill {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
-
-    .merch-pill strong {
-      color: var(--accent-strong);
-    }
-
-    .btn-merch {
-      margin-top: 8px;
-      font-size: 14px;
-    }
-
-    .small-muted {
-      font-size: 11px;
-      margin-top: 4px;
-      color: var(--text-muted);
-    }
-
-    .merch-status {
-      font-weight: 600;
-    }
-
-    .merch-status-error {
-      color: var(--danger);
-    }
-
     /* Снежинки */
 
     .snowflake {
@@ -735,8 +680,7 @@
         order: -1;
       }
       .panel-grid,
-      .cta-panel,
-      .merch-grid {
+      .cta-panel {
         grid-template-columns: minmax(0, 1fr);
       }
       .nav-links {
@@ -758,7 +702,7 @@
       <div class="nav-left">
         <div class="nav-logo"></div>
         <div class="nav-title">
-          <div class="nav-title-main">HORUS V</div>
+          <div class="nav-title-main">HORUS VI</div>
           <div class="nav-title-sub">Сюжетный SMP-сервер</div>
         </div>
       </div>
@@ -767,7 +711,6 @@
         <a href="#season">Сезон и лор</a>
         <a href="#rules">Правила</a>
         <a href="#faq">FAQ</a>
-        <a href="#merch">Мерч</a>
         <a href="#selection">Отбор</a>
       </div>
       <div class="nav-cta">
@@ -793,14 +736,13 @@
   </header>
 
   <main>
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-left">
         <div class="hero-kicker">
-          <span class="dot"></span> Horus V — лор важнее доната
+          <span class="dot"></span> Horus VI — лор важнее доната
         </div>
         <h1 class="hero-title">
-          Сюжетный сервер <span>Horus V</span> с отбором через Telegram
+          Сюжетный сервер <span>Horus VI</span> с отбором через Telegram
         </h1>
         <p class="hero-subtitle">
           Небольшой, но живой SMP-сервер с лором, событиями каждую субботу и
@@ -839,16 +781,15 @@
       <div class="hero-right">
         <div class="hero-card">
           <div class="hero-logo-wrapper">
-            <!-- Просто покажем логотип как фон -->
             <img
               src="https://github.com/artemPGH/Horus-site/blob/main/logo-horus.png?raw=true"
-              alt="Horus V logo"
+              alt="Horus VI logo"
               class="hero-logo"
               onerror="this.style.display='none';"
             />
           </div>
           <div class="hero-card-footer">
-            <span>Horus V · сюжетный SMP</span>
+            <span>Horus VI · сюжетный SMP</span>
             <span class="badge-pill">
               <span class="dot"></span> Лор продолжается
             </span>
@@ -857,11 +798,10 @@
       </div>
     </section>
 
-    <!-- О СЕРВЕРЕ -->
     <section id="about">
       <div class="section-header">
         <div class="section-kicker">О сервере</div>
-        <div class="section-title">Чем Horus V отличается от обычных серверов</div>
+        <div class="section-title">Чем Horus VI отличается от обычных серверов</div>
         <div class="section-description">
           Это не сетка мини-игр, а компактный сюжетный мир, который развивается вместе с
           игроками и серией на YouTube.
@@ -905,7 +845,6 @@
       </div>
     </section>
 
-    <!-- СЕЗОН И ЛОР -->
     <section id="season">
       <div class="section-header">
         <div class="section-kicker">Сезон и лор</div>
@@ -947,7 +886,6 @@
       </div>
     </section>
 
-    <!-- ПРАВИЛА -->
     <section id="rules">
       <div class="section-header">
         <div class="section-kicker">Правила и требования</div>
@@ -968,7 +906,7 @@
             <div class="rule-title">Никаких читов и «серых» модов</div>
             <div class="rule-body">
               X-ray, макросы, читы, внешние программы — всё это моментальный перманентный
-              бан. Horus V строится на доверии.
+              бан. Horus VI строится на доверии.
             </div>
           </div>
 
@@ -991,7 +929,7 @@
           <div class="rule-card">
             <div class="rule-title">Готовность попадать в ролики</div>
             <div class="rule-body">
-              Сервер связан с YouTube-серией. Если ты играешь на Horus V, есть шанс
+              Сервер связан с YouTube-серией. Если ты играешь на Horus VI, есть шанс
               попасть в серию — своим действием или даже просто фоном.
             </div>
           </div>
@@ -1007,7 +945,6 @@
       </div>
     </section>
 
-    <!-- FAQ -->
     <section id="faq">
       <div class="section-header">
         <div class="section-kicker">FAQ</div>
@@ -1031,7 +968,7 @@
               <strong>Скорее всего нет.</strong> TLauncher часто конфликтует с модами и
               голосовым чатом. Мы рекомендуем (и в отборе просим) использовать
               <strong>Prism Launcher</strong>. После прохождения теста ты получишь
-              подробную инструкцию, как его настроить под Horus V.
+              подробную инструкцию, как его настроить под Horus VI.
             </div>
           </li>
           <li class="faq-item">
@@ -1053,74 +990,18 @@
       </div>
     </section>
 
-    <!-- MERCH -->
-    <section id="merch">
-      <div class="section-header">
-        <div class="section-kicker">Horus-мерч</div>
-        <div class="section-title">Откроем магазин, когда о сервере узнают 10 000 человек</div>
-      </div>
-
-      <div class="panel merch-grid">
-        <div>
-          <p style="font-size:14px;color:var(--text-muted);">
-            У нас есть планы на худи, стикеры и, возможно, фигурки по событиям сезона. Но
-            запускать магазин раньше времени не хочется.
-          </p>
-          <p class="merch-pill">
-            Как только о сервере узнают <strong>10 000 человек</strong>, мы подготовим
-            полноценный магазин с доставкой и отдельным лором вокруг вещей.
-          </p>
-
-          <p style="font-size:14px;margin-top:10px;">
-            Сейчас нас ждут:
-            <span id="merchCount" class="merch-status">…</span>
-            человек.
-          </p>
-
-          <button id="merchButton" class="btn-primary btn-merch">
-            <span class="icon">🧥</span>
-            <span>Спасибо, ждём вместе!</span>
-          </button>
-
-          <div class="small-muted">
-            Кнопка работает один раз с этого устройства. Чисто, чтобы не накрутить руками.
-          </div>
-
-          <div class="progress-bar">
-            <div id="merchProgress" class="progress-bar-inner"></div>
-          </div>
-        </div>
-        <div>
-          <p style="font-size:13px;color:var(--text-muted);">
-            Это эксперимент: мы хотим понять, насколько сообществу реально интересен
-            оффлайн-продолжение сервера. Счётчик общий для всех и хранится на внешнем
-            сервисе.
-          </p>
-          <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">
-            Когда цифра дойдёт до 10 000, на этом сайте появится ссылка на магазин и
-            отдельная страница лора про «Horus Merch».
-          </p>
-
-          <p id="merchError" class="small-muted merch-status-error" style="display:none;">
-            Не удалось загрузить данные счётчика. Попробуй обновить страницу позже.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ТРЕЙЛЕР -->
     <section id="trailer">
       <div class="section-header">
         <div class="section-kicker">Трейлер</div>
-        <div class="section-title">Посмотри сериал Horus V перед отбором</div>
+        <div class="section-title">Посмотри сериал Horus VI перед отбором</div>
       </div>
 
       <div class="panel panel-grid">
         <div>
           <div class="trailer-embed">
             <iframe
-              src="https://www.youtube.com/embed/ceHUeVh0VdU"
-              title="Horus V — трейлер сериала"
+              src="https://www.youtube.com/embed/OvY8XSCGNTY"
+              title="Horus VI — трейлер сериала"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
@@ -1133,7 +1014,7 @@
           </p>
           <ul class="links-list">
             <li>
-              📺 Полный канал с серией по Horus V:
+              📺 Полный канал с серией по Horus VI:
               <a
                 href="https://www.youtube.com/@ArtemStudio-new"
                 target="_blank"
@@ -1144,7 +1025,7 @@
             <li>
               🎞 Трейлер сезона:
               <a
-                href="https://www.youtube.com/watch?v=ceHUeVh0VdU"
+                href="https://www.youtube.com/watch?v=OvY8XSCGNTY"
                 target="_blank"
                 rel="noopener noreferrer"
                 >посмотреть на YouTube</a
@@ -1155,11 +1036,10 @@
       </div>
     </section>
 
-    <!-- ОТБОР -->
     <section id="selection">
       <div class="section-header">
         <div class="section-kicker">Отбор</div>
-        <div class="section-title">Как попасть на сервер Horus V</div>
+        <div class="section-title">Как попасть на сервер Horus VI</div>
       </div>
 
       <div class="panel cta-panel">
@@ -1203,7 +1083,7 @@
     </section>
 
     <footer>
-      <div>© Horus V · сюжетный SMP. Атмосфера важнее онлайна.</div>
+      <div>© Horus VI · сюжетный SMP. Атмосфера важнее онлайна.</div>
       <div>Сайт сделан специально под отбор и лор сервера.</div>
     </footer>
   </main>
@@ -1239,82 +1119,12 @@
         const seconds = Math.floor(diff / 1000) % 60;
         const minutes = Math.floor(diff / (1000 * 60)) % 60;
         const hours = Math.floor(diff / (1000 * 60 * 60));
-
         const pad = (n) => String(n).padStart(2, "0");
         el.textContent = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
       }
 
       tick();
       setInterval(tick, 1000);
-    }
-
-    // ====== FIREBASE-СЧЁТЧИК ДЛЯ МЕРЧА ======
-    // ЗДЕСЬ ВСТАВЬ СВОЙ URL К БАЗЕ, КОТОРУЮ МЫ УЖЕ НАСТРОИЛИ РАНЬШЕ
-    // Пример: "https://horus-merch-default-rtdb.europe-west1.firebasedatabase.app/merchCount.json"
-    const FIREBASE_URL =
-      "https://horus-merch-default-rtdb.europe-west1.firebasedatabase.app/merchCount.json";
-
-    const merchCountEl = document.getElementById("merchCount");
-    const merchProgressEl = document.getElementById("merchProgress");
-    const merchButton = document.getElementById("merchButton");
-    const merchErrorEl = document.getElementById("merchError");
-
-    const MERCH_GOAL = 10000;
-
-    async function loadMerchCount() {
-      try {
-        const resp = await fetch(FIREBASE_URL);
-        if (!resp.ok) throw new Error("HTTP " + resp.status);
-        const value = await resp.json();
-        const count = typeof value === "number" ? value : 0;
-        updateMerchUI(count);
-      } catch (e) {
-        console.error("Failed to load merchCount:", e);
-        merchCountEl.textContent = "нет связи";
-        merchErrorEl.style.display = "block";
-      }
-    }
-
-    function updateMerchUI(count) {
-      merchCountEl.textContent = count.toLocaleString("ru-RU");
-      const progress = Math.min(count / MERCH_GOAL, 1) * 100;
-      merchProgressEl.style.width = progress.toFixed(2) + "%";
-    }
-
-    async function incrementMerchCount() {
-      if (!merchButton || merchButton.disabled) return;
-      merchButton.disabled = true;
-
-      try {
-        // Используем транзакционный подход через GET и PUT (простая реализация)
-        const resp = await fetch(FIREBASE_URL);
-        if (!resp.ok) throw new Error("HTTP " + resp.status);
-        const value = await resp.json();
-        const current = typeof value === "number" ? value : 0;
-        const next = current + 1;
-
-        const putResp = await fetch(FIREBASE_URL, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(next),
-        });
-        if (!putResp.ok) throw new Error("HTTP PUT " + putResp.status);
-
-        updateMerchUI(next);
-        // Сохраняем локально, чтобы с этого устройства нельзя было кликнуть ещё раз
-        localStorage.setItem("horus_merch_clicked", "1");
-      } catch (e) {
-        console.error("Failed to increment merchCount:", e);
-        merchErrorEl.style.display = "block";
-      }
-    }
-
-    if (merchButton) {
-      const clicked = localStorage.getItem("horus_merch_clicked") === "1";
-      if (clicked) {
-        merchButton.disabled = true;
-      }
-      merchButton.addEventListener("click", incrementMerchCount);
     }
 
     // ====== СНЕГ ======
@@ -1343,7 +1153,6 @@
     // Инициализация
     document.addEventListener("DOMContentLoaded", () => {
       startSaturdayTimer();
-      loadMerchCount();
       startSnow();
     });
   </script>
