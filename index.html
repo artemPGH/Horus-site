@@ -716,7 +716,7 @@
       <div class="nav-cta">
         <a
           class="btn-secondary"
-          href="https://www.youtube.com/@ArtemStudio-new"
+          href="https://www.youtube.com/@ArtemHorus"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -745,7 +745,7 @@
           Сюжетный сервер <span>Horus VI</span> с отбором через Telegram
         </h1>
         <p class="hero-subtitle">
-          Небольшой, но живой SMP-сервер с лором, событиями каждую субботу и
+          Небольшой, но живой SMP-сервер с лором, событиями каждое Воскресенье и
           отбором игроков через бота. Без pay-to-win, без донат-приватов — важны люди, а
           не шмот.
         </p>
@@ -771,7 +771,7 @@
             <span class="icon">📜</span> Лор со Смотрителями, Невидимкой и Охотником
           </div>
           <div class="hero-meta-item">
-            <span class="icon">🧪</span> Ивенты и расширение мира по субботам
+            <span class="icon">🧪</span> Ивенты и расширение мира по воскресеньям
           </div>
           <div class="hero-meta-item">
             <span class="icon">🎥</span> Сервер попадает в сериал на YouTube
@@ -816,7 +816,7 @@
               донат-приватов или pay-to-win. Всё, что происходит — часть истории.
             </li>
             <li>
-              <strong>Ивенты и «субботы».</strong> По выходным проходят плановые события:
+              <strong>Ивенты и «Воскресенья».</strong> По выходным проходят плановые события:
               расширение барьера, открытия измерений, метеориты, вмешательство Смотрителей
               и многое другое.
             </li>
@@ -833,8 +833,8 @@
               а некоторые игроки становятся героями серий.
             </li>
             <li>
-              <strong>Техническая часть.</strong> Fabric-моды, голосовой чат, аккуратные
-              визуальные улучшения — без превращения сервера в мод-пак из 150 модов.
+              <strong>Техническая часть.</strong> Моды, голосовой чат, Много 
+              create также любим фабрики и автомацизатию!
             </li>
             <li>
               <strong>Отбор через бота.</strong> Перед заходом вы проходите анкету и тест
@@ -861,8 +861,8 @@
         </p>
         <ul class="panel-list">
           <li>
-            В мире давно действует <strong>барьер</strong>. Он постепенно расширяется по
-            субботам, открывая новые территории и сюжеты.
+            В мире давно действуют <strong>аномалии</strong>. Они постепенно расширяются по
+            воскрисеньям, открывая новые сюжеты.
           </li>
           <li>
             Среди игроков появился <strong>Невидимка</strong>, который может выходить за
@@ -956,7 +956,7 @@
           <li class="faq-item">
             <div class="faq-q">Сервер пиратский или только лицензия?</div>
             <div class="faq-a">
-              Сервер — пиратский, но с аккуратным набором Fabric-модов. Важно не то, где
+              Сервер — пиратский, но с аккуратным набором модов. Важно не то, где
               ты купил игру, а как ты играешь.
             </div>
           </li>
@@ -1016,10 +1016,10 @@
             <li>
               📺 Полный канал с серией по Horus VI:
               <a
-                href="https://www.youtube.com/@ArtemStudio-new"
+                href="https://www.youtube.com/@ArtemHorus"
                 target="_blank"
                 rel="noopener noreferrer"
-                >@ArtemStudio-new</a
+                >@ArtemHorus</a
               >
             </li>
             <li>
@@ -1071,11 +1071,11 @@
         <div>
           <div class="timer-box">
             <div style="font-size:12px;color:var(--text-muted);">
-              До ближайшей субботы (ивентового дня) осталось:
+              До ближайшего Воскрисенья (ивентового дня) осталось:
             </div>
-            <div id="saturdayTimer" class="timer-value">--:--:--</div>
+            <div id="sundayTimer" class="timer-value">--:--:--</div>
             <div style="font-size:12px;color:var(--text-muted);">
-              В субботу обычно проходят ключевые сюжетные события и расширения барьера.
+              В Воскрисенье обычно проходят ключевые сюжетные события.
             </div>
           </div>
         </div>
@@ -1090,39 +1090,42 @@
 
   <script>
     // ====== ТАЙМЕР ДО БЛИЖАЙШЕЙ СУББОТЫ 19:00 ======
-    function getNextSaturday19() {
+     function getNextSunday11() {
       const now = new Date();
       const result = new Date(now);
-      const day = now.getDay(); // 0 = вс, 6 = сб
-      const daysUntilSaturday = (6 - day + 7) % 7 || 7; // всегда вперёд
-      result.setDate(now.getDate() + daysUntilSaturday);
-      result.setHours(19, 0, 0, 0); // 19:00
+      const day = now.getDay(); // 0 = вс, 1 = пн ... 6 = сб
+      
+      // Вычисляем дни до ближайшего воскресенья (всегда вперед)
+      const daysUntilSunday = (0 - day + 7) % 7 || 7; 
+      
+      result.setDate(now.getDate() + daysUntilSunday);
+      result.setHours(11, 0, 0, 0); // 11:00
       return result;
     }
-
-    function startSaturdayTimer() {
-      const el = document.getElementById("saturdayTimer");
+    
+    function startSundayTimer() {
+      const el = document.getElementById("sundayTimer"); // Замените ID, если нужно
       if (!el) return;
-
-      let target = getNextSaturday19();
-
+    
+      let target = getNextSunday11();
+    
       function tick() {
         const now = new Date();
         let diff = target.getTime() - now.getTime();
-
+    
         if (diff <= 0) {
-          // Суббота наступила — считаем до следующей
-          target = getNextSaturday19();
+          // Воскресенье наступило — считаем до следующего
+          target = getNextSunday11();
           diff = target.getTime() - now.getTime();
         }
-
+    
         const seconds = Math.floor(diff / 1000) % 60;
         const minutes = Math.floor(diff / (1000 * 60)) % 60;
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const pad = (n) => String(n).padStart(2, "0");
         el.textContent = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
       }
-
+    
       tick();
       setInterval(tick, 1000);
     }
