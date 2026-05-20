@@ -26,7 +26,6 @@
       --radius-xl: 22px;
       --radius-pill: 999px;
       --nav-height: 64px;
-      --snow-color: rgba(255, 255, 255, 0.85);
     }
 
     * {
@@ -80,7 +79,7 @@
           circle at 100% 0,
           rgba(255, 255, 255, 0.04) 0,
           transparent 45%
-        );
+      );
       mix-blend-mode: soft-light;
       opacity: 0.35;
       pointer-events: none;
@@ -630,36 +629,6 @@
       display: block;
     }
 
-    /* Снежинки */
-
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: var(--snow-color);
-      user-select: none;
-      pointer-events: none;
-      z-index: 50;
-      font-size: 10px;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-      animation-name: fall;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translate3d(var(--sx), -10px, 0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      100% {
-        transform: translate3d(var(--sx-end), 110vh, 0);
-        opacity: 0;
-      }
-    }
-
     footer {
       margin-top: 32px;
       padding-top: 16px;
@@ -837,7 +806,7 @@
               create также любим фабрики и автомацизатию!
             </li>
             <li>
-              <strong>Отбор через бота.</strong> Перед заходом вы проходите анкету и тест
+              <strong>Отбор через бота.</strong> Перед заход вы проходите анкету и тест
               по лору/правилам. Это защищает сервер от читеров и случайных людей.
             </li>
           </ul>
@@ -1064,7 +1033,7 @@
             </a>
           </div>
           <p class="cta-note">
-            После успешного теста с тобой лично свяжется админ и выдаст IP, модпак и
+            After успешного теста с тобой лично свяжется админ и выдаст IP, модпак и
             инструкции по Prism Launcher.
           </p>
         </div>
@@ -1089,7 +1058,7 @@
   </main>
 
   <script>
-    // ====== ТАЙМЕР ДО БЛИЖАЙШЕЙ СУББОТЫ 19:00 ======
+    // ====== ТАЙМЕР ДО БЛИЖАЙШЕГО ВОСКРЕСЕНЬЯ 11:00 ======
      function getNextSunday11() {
       const now = new Date();
       const result = new Date(now);
@@ -1104,11 +1073,10 @@
     }
     
     function startSundayTimer() {
-      const el = document.getElementById("sundayTimer"); // Замените ID, если нужно
+      const el = document.getElementById("sundayTimer");
       if (!el) return;
     
       let target = getNextSunday11();
-    
       function tick() {
         const now = new Date();
         let diff = target.getTime() - now.getTime();
@@ -1130,33 +1098,9 @@
       setInterval(tick, 1000);
     }
 
-    // ====== СНЕГ ======
-    function spawnSnowflake() {
-      const snow = document.createElement("div");
-      snow.className = "snowflake";
-      snow.textContent = "❆";
-
-      const startX = Math.random() * 100;
-      const endX = startX + (Math.random() * 20 - 10);
-
-      snow.style.left = startX + "vw";
-      snow.style.setProperty("--sx", startX + "vw");
-      snow.style.setProperty("--sx-end", endX + "vw");
-      snow.style.animationDuration = 8 + Math.random() * 6 + "s";
-      snow.style.fontSize = 8 + Math.random() * 6 + "px";
-      document.body.appendChild(snow);
-
-      snow.addEventListener("animationend", () => snow.remove());
-    }
-
-    function startSnow() {
-      setInterval(spawnSnowflake, 300);
-    }
-
     // Инициализация
     document.addEventListener("DOMContentLoaded", () => {
-      startSaturdayTimer();
-      startSnow();
+      startSundayTimer();
     });
   </script>
 </body>
